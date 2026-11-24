@@ -1,0 +1,19 @@
+{
+  "name": "منصة أبلة بطة التعليمية",
+  "short_name": "أبلة بطة",
+  "description": "مكتبة مجانية من أوراق العمل والنصايح للأمهات، وجلسات تخاطب واستشارات أونلاين مع أ. فاطمة منازع.",
+  "lang": "ar",
+  "dir": "rtl",
+  "id": "./",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#122951",
+  "theme_color": "#FFD228",
+  "icons": [
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
