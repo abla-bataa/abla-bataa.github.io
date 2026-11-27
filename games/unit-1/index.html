@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ألعاب الوحدة الأولى: أسمع وأفهم | منصة أبلة بطة التعليمية</title>
+<style>
+  * { box-sizing: border-box; }
+  html, body { margin: 0; min-height: 100%; }
+  body {
+    background: #fdf7f9;
+    font-family: "Segoe UI", Tahoma, Arial, sans-serif;
+    color: #4a2b3a;
+    padding: 16px;
+  }
+  .duck-game { max-width: 760px; margin: 0 auto; }
+  .duck-head { text-align: center; margin-bottom: 8px; }
+  .duck-logo { font-size: 64px; line-height: 1.1; }
+  .duck-title { font-size: 32px; margin: 4px 0 2px; color: #b23a6d; }
+  .duck-sub { font-size: 14px; color: #7a6a72; margin: 0 auto; max-width: 36ch; }
+  .duck-panel {
+    background: linear-gradient(160deg, #fff6d9 0%, #ffe7f0 100%);
+    border: 3px solid #ffd23e;
+    border-radius: 28px;
+    padding: 20px 16px 24px;
+    margin-top: 14px;
+    text-align: center;
+  }
+  .duck-mom { font-size: 15px; color: #7a6a72; margin: 0 0 16px; }
+  .duck-start {
+    font-size: 22px; font-weight: 700; color: #7a2050;
+    background: #ffd23e; border: none; border-radius: 999px;
+    padding: 16px 40px; min-height: 56px; cursor: pointer;
+    box-shadow: 0 4px 0 #f0b429; font-family: inherit;
+  }
+  .duck-start:active { transform: translateY(3px); box-shadow: 0 1px 0 #f0b429; }
+  .duck-menu { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 6px; }
+  .duck-card {
+    display: flex; align-items: center; gap: 10px;
+    background: #fff; border: 3px solid #ff9ec6; border-radius: 20px;
+    padding: 14px 14px; min-height: 72px; cursor: pointer;
+    text-align: right; font-family: inherit;
+  }
+  .duck-card:active { background: #fff0f6; }
+  .duck-card-emoji { font-size: 36px; line-height: 1; }
+  .duck-card-word { font-size: 17px; font-weight: 700; color: #4a2b3a; }
+  .duck-card-cat { font-size: 12px; color: #7a6a72; }
+  .duck-progress { font-size: 13px; color: #7a6a72; margin: 0 0 4px; }
+  .duck-question { font-size: 30px; color: #b23a6d; margin: 4px 0 16px; }
+  .duck-options { display: flex; flex-direction: column; gap: 14px; }
+  .duck-option {
+    display: flex; align-items: center; gap: 16px;
+    background: #fff; border: 3px solid #ff9ec6; border-radius: 24px;
+    padding: 14px 20px; min-height: 88px; cursor: pointer;
+    text-align: right; font-family: inherit;
+  }
+  .duck-option:active { background: #fff0f6; }
+  .duck-emoji { font-size: 52px; line-height: 1; }
+  .duck-word { font-size: 24px; font-weight: 700; color: #4a2b3a; }
+  .duck-option.is-right { border-color: #2fbf71; background: #e9fbef; animation: duck-pop .5s ease; }
+  .duck-option.is-wrong { border-color: #f2a0a0; background: #fff2f2; animation: duck-shake .4s ease; }
+  .duck-praise { font-size: 26px; font-weight: 700; color: #1d8a52; margin: 16px 0 0; }
+  .duck-try { font-size: 20px; font-weight: 700; color: #b23a6d; margin: 14px 0 0; }
+  .duck-stars { font-size: 46px; }
+  .duck-foot { text-align: center; font-size: 12px; color: #7a6a72; margin-top: 18px; }
+  .duck-back { display: inline-block; margin-top: 6px; font-size: 14px; color: #b23a6d; text-decoration: none; cursor: pointer; }
+  .duck-scene { margin: 6px auto 18px; min-height: 130px; display: flex; align-items: center; justify-content: center; }
+  .scene-col { display: flex; flex-direction: column; align-items: center; line-height: 1.05; }
+  .scene-ball { font-size: 56px; }
+  .scene-chair { font-size: 72px; }
+  .scene-row { display: flex; align-items: center; gap: 14px; }
+  .scene-box {
+    width: 150px; height: 110px; border: 5px solid #b23a6d; border-radius: 14px;
+    display: flex; align-items: center; justify-content: center; font-size: 54px;
+    background: #fff;
+  }
+  .scene-out { display: flex; align-items: center; gap: 12px; }
+  @keyframes duck-pop { 0% { transform: scale(1); } 50% { transform: scale(1.06); } 100% { transform: scale(1); } }
+  @keyframes duck-shake { 0%,100% { transform: translateX(0); } 25% { transform: translateX(-6px); } 75% { transform: translateX(6px); } }
+  @media (min-width: 640px) {
+    .duck-options { flex-direction: row; }
+    .duck-option { flex: 1; flex-direction: column; justify-content: center; text-align: center; gap: 8px; padding: 18px 10px; }
+    .duck-emoji { font-size: 60px; }
+    .duck-menu { grid-template-columns: 1fr 1fr 1fr; }
+  }
+</style>
+</head>
+<body>
+<div class="duck-game">
+  <div class="duck-head">
+    <div class="duck-logo">🦆</div>
+    <h1 class="duck-title" id="pageTitle">ألعاب الوحدة الأولى</h1>
+    <p class="duck-sub" id="pageSub">أسمع وأفهم — من كتاب «أتعلم وأكتشف مع أبلة بطة» لأطفال من سنتين لتلاتة</p>
+  </div>
+  <div class="duck-panel" id="panel"></div>
+  <p class="duck-foot">سلسلة أبلة بطة التعليمية، د. فاطمة منازع، أخصائية تخاطب وتربية خاصة</p>
+  <div style="text-align:center"><a class="duck-back" href="/">→ رجوع للمنصة</a></div>
+</div>
+<script>
+var ANIMALS = [
+  { word: 'القطة', emoji: '🐱' }, { word: 'الكلب', emoji: '🐶' }, { word: 'الأرنب', emoji: '🐰' },
+  { word: 'الفرخة', emoji: '🐔' }, { word: 'الخروف', emoji: '🐑' }, { word: 'البقرة', emoji: '🐮' },
+  { word: 'البطة', emoji: '🦆' }, { word: 'الفيل', emoji: '🐘' }, { word: 'القرد', emoji: '🐒' }
+];
+var FRUITS = [
+  { word: 'التفاحة', emoji: '🍎' }, { word: 'الموزة', emoji: '🍌' }, { word: 'العنب', emoji: '🍇' },
+  { word: 'البرتقالة', emoji: '🍊' }, { word: 'الفراولة', emoji: '🍓' }, { word: 'البطيخ', emoji: '🍉' },
+  { word: 'الكمثرى', emoji: '🍐' }, { word: 'الخوخ', emoji: '🍑' }
+];
+var DRINKS = [
+  { word: 'اللبن', emoji: '🥛' }, { word: 'العصير', emoji: '🧃' }, { word: 'الشاي', emoji: '🍵' },
+  { word: 'المياه', emoji: '💧' }, { word: 'الكاكاو', emoji: '☕' }, { word: 'الببرونة', emoji: '🍼' }
+];
+var HOME = [
+  { word: 'المعلقة', emoji: '🥄' }, { word: 'الشوكة', emoji: '🍴' }, { word: 'الطبق', emoji: '🍽️' },
+  { word: 'المفتاح', emoji: '🔑' }, { word: 'الكرسي', emoji: '🪑' }, { word: 'السرير', emoji: '🛏️' },
+  { word: 'التلفزيون', emoji: '📺' }, { word: 'التليفون', emoji: '📱' }
+];
+var CLOTHES = [
+  { word: 'التيشيرت', emoji: '👕' }, { word: 'البنطلون', emoji: '👖' }, { word: 'الجورب', emoji: '🧦' },
+  { word: 'الجزمة', emoji: '👟' }, { word: 'الطاقية', emoji: '🧢' }, { word: 'الفستان', emoji: '👗' },
+  { word: 'الجاكت', emoji: '🧥' }
+];
+var BATHROOM = [
+  { word: 'فرشة الأسنان', emoji: '🪥' }, { word: 'الصابونة', emoji: '🧼' }, { word: 'الشاور', emoji: '🚿' },
+  { word: 'البانيو', emoji: '🛁' }, { word: 'الشامبو', emoji: '🧴' }, { word: 'الرول', emoji: '🧻' }
+];
+var BODY = [
+  { word: 'العين', emoji: '👁️' }, { word: 'الأنف', emoji: '👃' }, { word: 'الفم', emoji: '👄' },
+  { word: 'الودن', emoji: '👂' }, { word: 'الإيد', emoji: '🖐️' }, { word: 'الرجل', emoji: '🦵' }
+];
+var MIXED = ANIMALS.concat(FRUITS, DRINKS, HOME, CLOTHES, BATHROOM, BODY);
+
+var GAMES = [
+  { id: 'animals', icon: '🐱', title: 'فين الحيوان؟', cat: 'الحيوانات', ask: 'فين {w}؟', items: ANIMALS, n: 3, rounds: 6,
+    mom: 'يا ماما، قولي لطفلك: «فين» الحيوان اللي هقوله، وخليه يدوس عليه لوحده.' },
+  { id: 'fruits', icon: '🍎', title: 'فين التفاحة؟', cat: 'الفواكه', ask: 'فين {w}؟', items: FRUITS, n: 3, rounds: 6,
+    mom: 'يا ماما، قولي لطفلك: «فين» الفاكهة اللي هقولها، وخليه يدوس عليها لوحده.' },
+  { id: 'drinks', icon: '🥛', title: 'فين الكوباية؟', cat: 'المشروبات', ask: 'فين {w}؟', items: DRINKS, n: 3, rounds: 6,
+    mom: 'يا ماما، قولي لطفلك: «فين» المشروب اللي هقوله، وخليه يدوس عليه لوحده.' },
+  { id: 'home', icon: '🥄', title: 'أدوات المنزل', cat: 'حاجات البيت', ask: 'فين {w}؟', items: HOME, n: 3, rounds: 6,
+    mom: 'يا ماما، قولي لطفلك: «فين» الأداة اللي هقولها، وخليه يدوس عليها لوحده.' },
+  { id: 'clothes', icon: '👕', title: 'فين التيشيرت؟', cat: 'الملابس', ask: 'فين {w}؟', items: CLOTHES, n: 3, rounds: 6,
+    mom: 'يا ماما، قولي لطفلك: «فين» الهدوم اللي هقولها، وخليه يدوس عليها لوحده.' },
+  { id: 'bathroom', icon: '🪥', title: 'أدوات الحمام', cat: 'حاجات الحمام', ask: 'فين {w}؟', items: BATHROOM, n: 3, rounds: 6,
+    mom: 'يا ماما، قولي لطفلك: «فين» الأداة اللي هقولها، وخليه يدوس عليها لوحده.' },
+  { id: 'body', icon: '👁️', title: 'فين عينك؟', cat: 'أجزاء الجسم', ask: 'فين {w}؟', items: BODY, n: 3, rounds: 6,
+    mom: 'يا ماما، قولي لطفلك: «فين» الجزء اللي هقوله من جسمه، وخليه يدوس عليه لوحده.' },
+  { id: 'two', icon: '🖼️', title: 'اختار الصورة', cat: 'من صورتين', ask: 'فين {w}؟', items: MIXED, n: 2, rounds: 6,
+    mom: 'يا ماما، مستوى أسهل: صورتين بس. قولي لطفلك «فين» الصورة اللي هقولها.' },
+  { id: 'three', icon: '👂', title: 'اسمع واختار', cat: 'من ٣ صور مختلطة', ask: 'فين {w}؟', items: MIXED, n: 3, rounds: 6,
+    mom: 'يا ماما، الطفل يسمع الكلمة ويلاقي صورتها وسط تلات صور مختلفة.' },
+  { id: 'overunder', icon: '⚽', title: 'فوق وتحت', cat: 'المفهوم المكاني', type: 'scene', scene: 'pos', rounds: 6,
+    mom: 'يا ماما، بصوا على الصورة واسألي طفلك: الكرة فوق ولا تحت الكرسي؟ خليه يدوس على الإجابة.' },
+  { id: 'inout', icon: '📦', title: 'جوه وبره', cat: 'المفهوم المكاني', type: 'scene', scene: 'inout', rounds: 6,
+    mom: 'يا ماما، بصوا على الصورة واسألي طفلك: الكرة جوه العلبة ولا بره؟ خليه يدوس على الإجابة.' },
+  { id: 'openclose', icon: '📖', title: 'افتح واقفل', cat: 'مفتوح ومقفول', ask: 'فين الكتاب {w}؟', items: [
+      { word: 'المفتوح', emoji: '📖' }, { word: 'المقفول', emoji: '📕' } ], n: 2, rounds: 6,
+    mom: 'يا ماما، قولي لطفلك: «فين الكتاب المفتوح؟» أو «المقفول؟» وخليه يدوس عليه لوحده.' },
+  { id: 'review', icon: '⭐', title: 'أنا فهمت', cat: 'مراجعة الوحدة', ask: 'فين {w}؟', items: MIXED, n: 3, rounds: 8,
+    mom: 'يا ماما، مراجعة الوحدة كلها: صور من كل الألعاب. لو طفلك عرف أغلبها، يبقى فهم الوحدة كويس.' }
+];
+
+var PRAISE = ['برافو عليك', 'شاطر', 'أيوه كده', 'عاش يا بطل', 'جميل جدًا'];
+var game = null, rounds = [], round = -1, locked = false, audioCtx = null;
+
+function shuffle(arr) {
+  var a = arr.slice();
+  for (var i = a.length - 1; i > 0; i--) {
+    var j = Math.floor(Math.random() * (i + 1));
+    var t = a[i]; a[i] = a[j]; a[j] = t;
+  }
+  return a;
+}
+function ac() {
+  if (!audioCtx) {
+    var AC = window.AudioContext || window.webkitAudioContext;
+    if (AC) audioCtx = new AC();
+  }
+  if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
+  return audioCtx;
+}
+function playHappy() {
+  try {
+    var c = ac(); if (!c) return;
+    [523.25, 659.25, 783.99, 1046.5].forEach(function (f, i) {
+      var o = c.createOscillator(), g = c.createGain();
+      o.type = 'triangle'; o.frequency.value = f;
+      g.gain.setValueAtTime(0.0001, c.currentTime + i * 0.12);
+      g.gain.exponentialRampToValueAtTime(0.25, c.currentTime + i * 0.12 + 0.02);
+      g.gain.exponentialRampToValueAtTime(0.0001, c.currentTime + i * 0.12 + 0.3);
+      o.connect(g); g.connect(c.destination);
+      o.start(c.currentTime + i * 0.12); o.stop(c.currentTime + i * 0.12 + 0.32);
+    });
+    for (var i = 0; i < 6; i++) {
+      var buf = c.createBuffer(1, c.sampleRate * 0.05, c.sampleRate);
+      var data = buf.getChannelData(0);
+      for (var s = 0; s < data.length; s++) data[s] = (Math.random() * 2 - 1) * (1 - s / data.length);
+      var src = c.createBufferSource(); src.buffer = buf;
+      var g2 = c.createGain(); g2.gain.value = 0.12;
+      src.connect(g2); g2.connect(c.destination);
+      src.start(c.currentTime + i * 0.09);
+    }
+  } catch (e) {}
+}
+function playSoft() {
+  try {
+    var c = ac(); if (!c) return;
+    var o = c.createOscillator(), g = c.createGain();
+    o.type = 'sine'; o.frequency.value = 330;
+    g.gain.setValueAtTime(0.15, c.currentTime);
+    g.gain.exponentialRampToValueAtTime(0.0001, c.currentTime + 0.25);
+    o.connect(g); g.connect(c.destination);
+    o.start(); o.stop(c.currentTime + 0.26);
+  } catch (e) {}
+}
+
+function makeChoiceRounds(g) {
+  var targets = shuffle(g.items).slice(0, g.rounds);
+  return targets.map(function (target) {
+    var distractors = shuffle(g.items.filter(function (i) { return i.word !== target.word; })).slice(0, g.n - 1);
+    return { target: target, options: shuffle([target].concat(distractors)) };
+  });
+}
+function makeSceneRounds(g) {
+  var out = [];
+  for (var i = 0; i < g.rounds; i++) {
+    var first = Math.random() < 0.5;
+    if (g.scene === 'pos') {
+      out.push({ sceneHtml: first
+        ? '<div class="scene-col"><span class="scene-ball">⚽</span><span class="scene-chair">🪑</span></div>'
+        : '<div class="scene-col"><span class="scene-chair">🪑</span><span class="scene-ball">⚽</span></div>',
+        question: 'الكرة فوق ولا تحت الكرسي؟',
+        options: [{ word: 'فوق' }, { word: 'تحت' }], correct: first ? 'فوق' : 'تحت' });
+    } else {
+      out.push({ sceneHtml: first
+        ? '<div class="scene-box">⚽</div>'
+        : '<div class="scene-out"><span class="scene-ball">⚽</span><span class="scene-box"></span></div>',
+        question: 'الكرة جوه العلبة ولا بره؟',
+        options: [{ word: 'جوه' }, { word: 'بره' }], correct: first ? 'جوه' : 'بره' });
+    }
+  }
+  return out;
+}
+
+function renderMenu() {
+  document.getElementById('pageTitle').textContent = 'ألعاب الوحدة الأولى';
+  var html = '<p class="duck-mom">اختاري لعبة والعبيها مع طفلك. كل لعبة نشاط من الوحدة الأولى «أسمع وأفهم».</p><div class="duck-menu">';
+  GAMES.forEach(function (g, i) {
+    html += '<button type="button" class="duck-card" data-g="' + i + '">' +
+      '<span class="duck-card-emoji">' + g.icon + '</span>' +
+      '<span><span class="duck-card-word">' + g.title + '</span><br>' +
+      '<span class="duck-card-cat">' + g.cat + '</span></span></button>';
+  });
+  html += '</div>';
+  document.getElementById('panel').innerHTML = html;
+  var cards = document.querySelectorAll('.duck-card');
+  for (var i = 0; i < cards.length; i++) {
+    cards[i].onclick = function () { openGame(GAMES[Number(this.getAttribute('data-g'))]); };
+  }
+}
+function openGame(g) {
+  game = g;
+  round = -1;
+  render();
+}
+function startGame() {
+  rounds = game.type === 'scene' ? makeSceneRounds(game) : makeChoiceRounds(game);
+  round = 0;
+  locked = false;
+  render();
+}
+function render() {
+  var panel = document.getElementById('panel');
+  document.getElementById('pageTitle').textContent = game ? game.title : 'ألعاب الوحدة الأولى';
+  if (round === -1) {
+    panel.innerHTML =
+      '<p class="duck-mom">' + game.mom + '</p>' +
+      '<button type="button" class="duck-start" id="startBtn">يلا نلعب 🎈</button>' +
+      '<div style="margin-top:10px"><a class="duck-back" id="menuLink">→ رجوع لقائمة الألعاب</a></div>';
+    document.getElementById('startBtn').onclick = startGame;
+    document.getElementById('menuLink').onclick = function () { game = null; renderMenu(); };
+    return;
+  }
+  if (round >= rounds.length) {
+    panel.innerHTML =
+      '<div class="duck-stars">⭐⭐⭐</div>' +
+      '<h2 class="duck-question">برافو عليك يا بطل</h2>' +
+      '<p class="duck-mom">خلص اللعب. الكتاب فيه عشرات الأنشطة زيها لطفلك من سنتين لتلاتة.</p>' +
+      '<button type="button" class="duck-start" id="againBtn">العبي تاني 🔁</button>' +
+      '<div style="margin-top:10px"><a class="duck-back" id="menuLink">→ لعبة تانية من الوحدة</a></div>';
+    document.getElementById('againBtn').onclick = startGame;
+    document.getElementById('menuLink').onclick = function () { game = null; renderMenu(); };
+    return;
+  }
+  var r = rounds[round];
+  var html = '<p class="duck-progress">سؤال ' + (round + 1) + ' من ' + rounds.length + '</p>';
+  if (game.type === 'scene') {
+    html += '<div class="duck-scene">' + r.sceneHtml + '</div>' +
+      '<h2 class="duck-question">' + r.question + '</h2><div class="duck-options">';
+    r.options.forEach(function (o) {
+      html += '<button type="button" class="duck-option" data-word="' + o.word + '">' +
+        '<span class="duck-word">' + o.word + '</span></button>';
+    });
+  } else {
+    html += '<h2 class="duck-question">' + game.ask.replace('{w}', r.target.word) + '</h2><div class="duck-options">';
+    r.options.forEach(function (item) {
+      html += '<button type="button" class="duck-option" data-word="' + item.word + '">' +
+        '<span class="duck-emoji">' + item.emoji + '</span>' +
+        '<span class="duck-word">' + item.word + '</span></button>';
+    });
+  }
+  html += '</div><div id="feedback"></div>';
+  panel.innerHTML = html;
+  var buttons = panel.querySelectorAll('.duck-option');
+  for (var i = 0; i < buttons.length; i++) {
+    buttons[i].onclick = function () { pick(this); };
+  }
+}
+function pick(btn) {
+  if (locked) return;
+  var r = rounds[round];
+  var word = btn.getAttribute('data-word');
+  var correct = game.type === 'scene' ? r.correct : r.target.word;
+  var feedback = document.getElementById('feedback');
+  if (word === correct) {
+    locked = true;
+    btn.classList.add('is-right');
+    feedback.innerHTML = '<p class="duck-praise">' + PRAISE[Math.floor(Math.random() * PRAISE.length)] + ' 🎉</p>';
+    playHappy();
+    setTimeout(function () {
+      round++;
+      locked = false;
+      render();
+    }, 1400);
+  } else {
+    btn.classList.add('is-wrong');
+    feedback.innerHTML = '<p class="duck-try">حاول تاني يا حبيبي 💛</p>';
+    playSoft();
+    setTimeout(function () {
+      btn.classList.remove('is-wrong');
+      feedback.innerHTML = '';
+    }, 900);
+  }
+}
+renderMenu();
+</script>
+</body>
+</html>
