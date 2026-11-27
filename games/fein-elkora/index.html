@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>لعبة فين الكرة؟ | منصة أبلة بطة التعليمية</title>
+<style>
+  * { box-sizing: border-box; }
+  html, body { margin: 0; min-height: 100%; }
+  body {
+    background: #fdf7f9;
+    font-family: "Segoe UI", Tahoma, Arial, sans-serif;
+    color: #4a2b3a;
+    padding: 16px;
+  }
+  .duck-game { max-width: 760px; margin: 0 auto; }
+  .duck-head { text-align: center; margin-bottom: 8px; }
+  .duck-logo { font-size: 64px; line-height: 1.1; }
+  .duck-title { font-size: 34px; margin: 4px 0 2px; color: #b23a6d; }
+  .duck-sub { font-size: 14px; color: #7a6a72; margin: 0 auto; max-width: 34ch; }
+  .duck-panel {
+    background: linear-gradient(160deg, #fff6d9 0%, #ffe7f0 100%);
+    border: 3px solid #ffd23e;
+    border-radius: 28px;
+    padding: 20px 16px 24px;
+    margin-top: 14px;
+    text-align: center;
+  }
+  .duck-mom { font-size: 15px; color: #7a6a72; margin: 0 0 16px; }
+  .duck-start {
+    font-size: 22px; font-weight: 700; color: #7a2050;
+    background: #ffd23e; border: none; border-radius: 999px;
+    padding: 16px 40px; min-height: 56px; cursor: pointer;
+    box-shadow: 0 4px 0 #f0b429; font-family: inherit;
+  }
+  .duck-start:active { transform: translateY(3px); box-shadow: 0 1px 0 #f0b429; }
+  .duck-progress { font-size: 13px; color: #7a6a72; margin: 0 0 4px; }
+  .duck-question { font-size: 30px; color: #b23a6d; margin: 4px 0 16px; }
+  .duck-options { display: flex; flex-direction: column; gap: 14px; }
+  .duck-option {
+    display: flex; align-items: center; gap: 16px;
+    background: #fff; border: 3px solid #ff9ec6; border-radius: 24px;
+    padding: 14px 20px; min-height: 88px; cursor: pointer;
+    text-align: right; font-family: inherit;
+  }
+  .duck-option:active { background: #fff0f6; }
+  .duck-emoji { font-size: 52px; line-height: 1; }
+  .duck-word { font-size: 24px; font-weight: 700; color: #4a2b3a; }
+  .duck-option.is-right { border-color: #2fbf71; background: #e9fbef; animation: duck-pop .5s ease; }
+  .duck-option.is-wrong { border-color: #f2a0a0; background: #fff2f2; animation: duck-shake .4s ease; }
+  .duck-praise { font-size: 26px; font-weight: 700; color: #1d8a52; margin: 16px 0 0; }
+  .duck-try { font-size: 20px; font-weight: 700; color: #b23a6d; margin: 14px 0 0; }
+  .duck-stars { font-size: 46px; }
+  .duck-foot { text-align: center; font-size: 12px; color: #7a6a72; margin-top: 18px; }
+  .duck-back { display: inline-block; margin-top: 6px; font-size: 14px; color: #b23a6d; text-decoration: none; }
+  @keyframes duck-pop { 0% { transform: scale(1); } 50% { transform: scale(1.06); } 100% { transform: scale(1); } }
+  @keyframes duck-shake { 0%,100% { transform: translateX(0); } 25% { transform: translateX(-6px); } 75% { transform: translateX(6px); } }
+  @media (min-width: 640px) {
+    .duck-options { flex-direction: row; }
+    .duck-option { flex: 1; flex-direction: column; justify-content: center; text-align: center; gap: 8px; padding: 18px 10px; }
+    .duck-emoji { font-size: 60px; }
+  }
+</style>
+</head>
+<body>
+<div class="duck-game">
+  <div class="duck-head">
+    <div class="duck-logo">🦆</div>
+    <h1 class="duck-title">فين الكرة؟</h1>
+    <p class="duck-sub">لعبة من كتاب «أتعلم وأكتشف مع أبلة بطة»، الوحدة الأولى: أسمع وأفهم</p>
+  </div>
+  <div class="duck-panel" id="panel"></div>
+  <p class="duck-foot">سلسلة أبلة بطة التعليمية، د. فاطمة منازع، أخصائية تخاطب وتربية خاصة</p>
+  <div style="text-align:center"><a class="duck-back" href="/">→ رجوع للمنصة</a></div>
+</div>
+<script>
+var ITEMS = [
+  { word: 'الكرة', emoji: '⚽' },
+  { word: 'القطة', emoji: '🐱' },
+  { word: 'التفاحة', emoji: '🍎' },
+  { word: 'الكوباية', emoji: '🥛' },
+  { word: 'التيشيرت', emoji: '👕' },
+  { word: 'المعلقة', emoji: '🥄' },
+  { word: 'الكلب', emoji: '🐶' },
+  { word: 'الموزة', emoji: '🍌' },
+  { word: 'العربية', emoji: '🚗' },
+  { word: 'البطة', emoji: '🦆' }
+];
+var PRAISE = ['برافو عليك', 'شاطر', 'أيوه كده', 'عاش يا بطل', 'جميل جدًا'];
+var ROUNDS = 6;
+var rounds = [], round = -1, locked = false, audioCtx = null;
+
+function shuffle(arr) {
+  var a = arr.slice();
+  for (var i = a.length - 1; i > 0; i--) {
+    var j = Math.floor(Math.random() * (i + 1));
+    var t = a[i]; a[i] = a[j]; a[j] = t;
+  }
+  return a;
+}
+function makeRounds() {
+  var targets = shuffle(ITEMS).slice(0, ROUNDS);
+  return targets.map(function (target) {
+    var distractors = shuffle(ITEMS.filter(function (i) { return i.word !== target.word; })).slice(0, 2);
+    return { target: target, options: shuffle([target].concat(distractors)) };
+  });
+}
+function ac() {
+  if (!audioCtx) {
+    var AC = window.AudioContext || window.webkitAudioContext;
+    if (AC) audioCtx = new AC();
+  }
+  if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
+  return audioCtx;
+}
+function playHappy() {
+  try {
+    var c = ac(); if (!c) return;
+    [523.25, 659.25, 783.99, 1046.5].forEach(function (f, i) {
+      var o = c.createOscillator(), g = c.createGain();
+      o.type = 'triangle'; o.frequency.value = f;
+      g.gain.setValueAtTime(0.0001, c.currentTime + i * 0.12);
+      g.gain.exponentialRampToValueAtTime(0.25, c.currentTime + i * 0.12 + 0.02);
+      g.gain.exponentialRampToValueAtTime(0.0001, c.currentTime + i * 0.12 + 0.3);
+      o.connect(g); g.connect(c.destination);
+      o.start(c.currentTime + i * 0.12); o.stop(c.currentTime + i * 0.12 + 0.32);
+    });
+    for (var i = 0; i < 6; i++) {
+      var buf = c.createBuffer(1, c.sampleRate * 0.05, c.sampleRate);
+      var data = buf.getChannelData(0);
+      for (var s = 0; s < data.length; s++) data[s] = (Math.random() * 2 - 1) * (1 - s / data.length);
+      var src = c.createBufferSource(); src.buffer = buf;
+      var g2 = c.createGain(); g2.gain.value = 0.12;
+      src.connect(g2); g2.connect(c.destination);
+      src.start(c.currentTime + i * 0.09);
+    }
+  } catch (e) {}
+}
+function playSoft() {
+  try {
+    var c = ac(); if (!c) return;
+    var o = c.createOscillator(), g = c.createGain();
+    o.type = 'sine'; o.frequency.value = 330;
+    g.gain.setValueAtTime(0.15, c.currentTime);
+    g.gain.exponentialRampToValueAtTime(0.0001, c.currentTime + 0.25);
+    o.connect(g); g.connect(c.destination);
+    o.start(); o.stop(c.currentTime + 0.26);
+  } catch (e) {}
+}
+function render() {
+  var panel = document.getElementById('panel');
+  if (round === -1) {
+    panel.innerHTML =
+      '<p class="duck-mom">يا ماما، قولي لطفلك: «فين» الصورة اللي هقولها، وخليه يدوس عليها لوحده. كل إجابة صح ليها تصفيق وتشجيع.</p>' +
+      '<button type="button" class="duck-start" id="startBtn">يلا نلعب 🎈</button>';
+    document.getElementById('startBtn').onclick = startGame;
+    return;
+  }
+  if (round >= rounds.length) {
+    panel.innerHTML =
+      '<div class="duck-stars">⭐⭐⭐</div>' +
+      '<h2 class="duck-question">برافو عليك يا بطل</h2>' +
+      '<p class="duck-mom">خلص اللعب. لو عجبتك اللعبة، الكتاب فيه عشرات الأنشطة زيها لطفلك من سنتين لتلاتة.</p>' +
+      '<button type="button" class="duck-start" id="againBtn">العبي تاني 🔁</button>';
+    document.getElementById('againBtn').onclick = startGame;
+    return;
+  }
+  var r = rounds[round];
+  var html = '<p class="duck-progress">سؤال ' + (round + 1) + ' من ' + rounds.length + '</p>' +
+    '<h2 class="duck-question">فين ' + r.target.word + '؟</h2>' +
+    '<div class="duck-options">';
+  r.options.forEach(function (item, idx) {
+    html += '<button type="button" class="duck-option" data-word="' + item.word + '" data-idx="' + idx + '">' +
+      '<span class="duck-emoji">' + item.emoji + '</span>' +
+      '<span class="duck-word">' + item.word + '</span></button>';
+  });
+  html += '</div><div id="feedback"></div>';
+  panel.innerHTML = html;
+  var buttons = panel.querySelectorAll('.duck-option');
+  for (var i = 0; i < buttons.length; i++) {
+    buttons[i].onclick = function () { pick(this); };
+  }
+}
+function startGame() {
+  rounds = makeRounds();
+  round = 0;
+  locked = false;
+  render();
+}
+function pick(btn) {
+  if (locked) return;
+  var r = rounds[round];
+  var word = btn.getAttribute('data-word');
+  var feedback = document.getElementById('feedback');
+  if (word === r.target.word) {
+    locked = true;
+    btn.classList.add('is-right');
+    feedback.innerHTML = '<p class="duck-praise">' + PRAISE[Math.floor(Math.random() * PRAISE.length)] + ' 🎉</p>';
+    playHappy();
+    setTimeout(function () {
+      round++;
+      locked = false;
+      render();
+    }, 1400);
+  } else {
+    btn.classList.add('is-wrong');
+    feedback.innerHTML = '<p class="duck-try">حاول تاني يا حبيبي 💛</p>';
+    playSoft();
+    setTimeout(function () {
+      btn.classList.remove('is-wrong');
+      feedback.innerHTML = '';
+    }, 900);
+  }
+}
+render();
+</script>
+</body>
+</html>
